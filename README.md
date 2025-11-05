@@ -20,31 +20,32 @@ Analyzes average daily rainfall over Kerala (Jan–Oct 2025) using CHIRPS Daily 
 
 ## 💻 Script Overview
 
-```javascript
-// Define area of interest
-var aoi = geometry;
 
-// Set date range
-var startDate = '2025-01-01';
-var endDate = '2025-10-31';
+//Defining area
+var aoi = geometry
 
-// Load CHIRPS Daily dataset
-var rainfall = ee.ImageCollection('UCSB-CHG/CHIRPS/DAILY')
-  .filter(ee.Filter.date(startDate, endDate))
-  .select('precipitation');
+//start & end Date
+var startDate= '2025-01-01'
+var endDate = '2025-10-31'
 
-// Create daily mean rainfall chart
+//Define rainfall data
+
+var imageCollection = 'UCSB-CHG/CHIRPS/DAILY'
+var bandName = 'precipitation'
+var resolution = 5566     //in meters
+
+//
+var rainfall = ee.ImageCollection(imageCollection)
+                    .filter(ee.Filter.date(startDate, endDate))
+                    .select(bandName);
+                    
 var chart = ui.Chart.image.series({
-  imageCollection: rainfall,
-  region: aoi,
-  reducer: ee.Reducer.mean(),
-  scale: 5566
-}).setOptions({
-  title: 'Average Daily Rainfall over Kerala (Jan–Oct 2025)',
-  hAxis: {title: 'Date'},
-  vAxis: {title: 'Rainfall (mm/day)'}
+  imageCollection: rainfall, 
+  region: aoi, 
+  reducer: ee.Reducer.mean(), 
+  scale: resolution,
 });
-
 print(chart);
-Map.addLayer(aoi);
-Map.centerObject(aoi);
+
+Map.addLayer (aoi)
+Map.centerObject(aoi)  
