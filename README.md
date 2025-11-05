@@ -20,32 +20,38 @@ Analyzes average daily rainfall over Kerala (Jan–Oct 2025) using CHIRPS Daily 
 
 ## 💻 Script Overview
 
+```javascript
+// Define Area of Interest (AOI)
+var aoi = geometry;
 
-//Defining area
-var aoi = geometry
+// Set time range
+var startDate = '2025-01-01';
+var endDate = '2025-10-31';
 
-//start & end Date
-var startDate= '2025-01-01'
-var endDate = '2025-10-31'
+// Define rainfall dataset and parameters
+var imageCollection = 'UCSB-CHG/CHIRPS/DAILY';
+var bandName = 'precipitation';
+var resolution = 5566; // in meters
 
-//Define rainfall data
-
-var imageCollection = 'UCSB-CHG/CHIRPS/DAILY'
-var bandName = 'precipitation'
-var resolution = 5566     //in meters
-
-//
+// Load and filter the CHIRPS rainfall data
 var rainfall = ee.ImageCollection(imageCollection)
-                    .filter(ee.Filter.date(startDate, endDate))
-                    .select(bandName);
-                    
+  .filter(ee.Filter.date(startDate, endDate))
+  .select(bandName);
+
+// Generate a time-series chart of average daily rainfall
 var chart = ui.Chart.image.series({
-  imageCollection: rainfall, 
-  region: aoi, 
-  reducer: ee.Reducer.mean(), 
-  scale: resolution,
+  imageCollection: rainfall,
+  region: aoi,
+  reducer: ee.Reducer.mean(),
+  scale: resolution
+}).setOptions({
+  title: 'Average Daily Rainfall over Kerala (Jan–Oct 2025)',
+  hAxis: {title: 'Date'},
+  vAxis: {title: 'Rainfall (mm/day)'}
 });
+
 print(chart);
 
-Map.addLayer (aoi)
-Map.centerObject(aoi)  
+// Display the study area
+Map.addLayer(aoi);
+Map.centerObject(aoi);
